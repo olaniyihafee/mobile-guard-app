@@ -1,94 +1,118 @@
-import { StatusBar } from 'expo-status-bar';
+import { SearchBar, ListItem, Avatar } from 'react-native-elements';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, SrollView, Image, Button, TextInput, ScrollView } from 'react-native';
 
-export default function Groups() {
 
-  const navigation = useNavigation();
 
-  function navigateToHome() {
-    navigation.navigate("Home");
-}
-  
-  return (
+export default class Groups extends React.Component {
 
-  <View style={styles.entireContainer}>
+  state = {
+    search: '',
+  };
 
-        <View style={styles.logoContainer}>
-          <Image source={require('../../../assets/icon.png')}style={styles.image}/>
-          <Text style={styles.heading}>Groups</Text>
-        </View>
+  updateSearch = (search) => {
+    this.setState({ search });
+  };
 
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Groups</Text>
-        </View>
-               
-        <View>
-          <a onClick={() => { document.location.href = "profile.html"; }}>forgot password</a> 
-        </View> 
+  render() {
+    const { search } = this.state;
 
-        <View style={styles.buttonsContainer}>
-            <Button title="Home"
-              style={styles.button}
-              color='orange'  
-              onPress= {()=>navigateToHome()}
-              />
-           
-        </View>
+    const list = [
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+      {
+        name: 'Amy Farha',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        subtitle: 'Vice President'
+      },
+      {
+        name: 'Chris Jackson',
+        avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        subtitle: 'Vice Chairman'
+      },
+    ];
 
-    </View>
-  );
-}
+    return (
+      <View>
+        <SearchBar
+        placeholder="Type Here..."
+        onChangeText={this.updateSearch}
+        value={search}
+        />
 
-const styles = StyleSheet.create({
-  listItems:{
-    display: 'inline-block',
-  },
-  entireContainer: {
-    flex: 1,    
-    backgroundColor: 'green',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoContainer: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heading: {
-    fontSize: '25px',
-  },
-  formsContainer: {
-    flex: 3,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  textinput: {
-    width: '250px',
-    height: '40px',
-    margin: '10px',
-    marginBottom: '20px',
-    padding: '5px',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-  },
-  image:{
-    width: "100px",
-    height:'100px'
-  },
-  buttonContainer:{
-    flex: 2,
-    flexDirection: 'row',    
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button:{
-    color: 'blue',
+        <ScrollView>
+          {
+            list.map((l, i) => (
+              <ListItem key={i} bottomDivider>
+                <Avatar source={{uri: l.avatar_url}} />
+                <ListItem.Content>
+                  <ListItem.Title>{l.name}</ListItem.Title>
+                  <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            ))
+          }
+        </ScrollView>
+      </View>
+
+    );
   }
-});
+}
