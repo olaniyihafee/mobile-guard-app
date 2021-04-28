@@ -12,7 +12,7 @@ const router = Router()
 router.post('/login', guest, catchAsync(async (req, res) => {
  await validate(loginSchema, req.body)
 
- const { email, password } = req.body
+ const { appelation, email, password } = req.body
 
  const user = await User.findOne({ email }) 
 
