@@ -11,7 +11,7 @@ router.post('/register', guest, catchAsync(async (req, res) => {
     await validate(registerSchema, req.body)
     console.log('HIT')
     
-    const { email, name, password } = req.body
+    const { appelation, email, name, password } = req.body
 
     const found = await User.exists({ email })
 
@@ -19,13 +19,16 @@ router.post('/register', guest, catchAsync(async (req, res) => {
         throw new BadRequest('Invalid email')
     }
 
+    
     const user = await User.create({
-        email, name, password
+        appelation, email, name, password
     })
 
     console.log(user.id)
 
     logIn(req, user.id)
+
+    res.status(1)
 
     res.json({ message: 'OK'})
 }))

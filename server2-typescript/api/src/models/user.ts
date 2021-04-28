@@ -3,6 +3,7 @@ import { hash, compare } from 'bcryptjs'
 import { BCRYPT_WORK_FACTOR } from '../config'
 
 interface UserDocument extends Document{
+    appelation: string
     email: string
     name: string 
     password: string
@@ -10,6 +11,7 @@ interface UserDocument extends Document{
 }
 
 const userSchema = new Schema({
+    appelation: String,
     email: String,
     name: String,
     password: String

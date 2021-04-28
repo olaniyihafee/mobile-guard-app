@@ -1,7 +1,8 @@
 import { RequestHandler, Request, Response, NextFunction } from "express";
 
 export const catchAsync = (handler: RequestHandler) =>
-    (...args: [Request, Response, NextFunction]) => handler(..args).catch(args[2])
+(req: Request, res: Response, next: NextFunction) => handler(req, res, next)//.catch(next)
+
 
 export const notFound = (req: Request, res: Response, next: NextFunction) =>
 res.json({ message: 'Not Found'})
