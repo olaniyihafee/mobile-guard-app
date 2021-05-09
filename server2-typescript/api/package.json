@@ -6,7 +6,8 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "dev": "ts-node-dev --no-notify src"
+    "dev": "ts-node-dev --no-notify src",
+    "start": "ts-node-dev src/index.ts"
   },
   "keywords": [],
   "author": "",
