@@ -11,38 +11,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 // Import Screens
 import SplashScreen from './Screen/SplashScreen';
-import LoginScreen from './Screen/LoginScreen';
-import RegisterScreen from './Screen/RegisterScreen';
-import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import Auth from './Screen/Auth';
+import MainNavRoutes from './Screen/MainScreens/MainNavRoutes';
 
 const Stack = createStackNavigator();
-
-const Auth = () => {
-  // Stack Navigator for Login and Sign up Screen
-  return (
-    <Stack.Navigator initialRouteName="LoginScreen">
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="RegisterScreen"
-        component={RegisterScreen}
-        options={{
-          title: 'Register', //Set Header Title
-          headerStyle: {
-            backgroundColor: '#307ecc', //Set Header color
-          },
-          headerTintColor: '#fff', //Set Header text color
-          headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
-          },
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
 
 /* Switch Navigator for those screens which needs to be switched only once
   and we don't want to switch back once we switch from them to the next one */
@@ -65,8 +37,8 @@ const App = () => {
         />
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
-          name="DrawerNavigationRoutes"
-          component={DrawerNavigationRoutes}
+          name="MainRoutes"
+          component={MainNavRoutes}
           // Hiding header for Navigation Drawer as we will use our custom header
           options={{headerShown: false}}
         />

@@ -11,7 +11,7 @@ router.post('/register', guest, catchAsync(async (req, res) => {
     await validate(registerSchema, req.body)
     console.log('HIT')
     
-    const { appelation, email, name, password } = req.body
+    const { email, name, password } = req.body
 
     const found = await User.exists({ email })
 
@@ -21,14 +21,12 @@ router.post('/register', guest, catchAsync(async (req, res) => {
 
     
     const user = await User.create({
-        appelation, email, name, password
+        email, name, password
     })
 
     console.log(user.id)
 
     logIn(req, user.id)
-
-    res.status(1)
 
     res.json({ message: 'OK'})
 }))

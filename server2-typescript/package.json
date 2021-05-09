@@ -7,7 +7,8 @@
     "up": "mkdir data && docker-compose up -d",
     "stop": "docker-compose stop",
     "down": "docker-compose down",
-    "dev": "npm run dev --prefix  api"
+    "dev": "npm run dev --prefix  api",
+    "start": "npm run dev --prefix  api"
   },
   "keywords": [],
   "author": "",
