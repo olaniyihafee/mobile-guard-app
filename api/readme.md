@@ -14,4 +14,6 @@ curl -v -X POST http://localhost:3000/register -H "Content-Type:application/json
     
     "@types/express": "^4.17.11",
     "@types/express-session": "^1.17.3",
+    
+    "@hapi/joi": "^17.1.1",
 ```
