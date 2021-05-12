@@ -7,7 +7,7 @@ import { BadRequest } from '../errors'
 
 const router = Router()
 
-router.post('/register', guest, catchAsync(async (req, res) => {
+router.post('/', guest, catchAsync(async (req, res) => {
     await validate(registerSchema, req.body)
     console.log('HIT')
     
