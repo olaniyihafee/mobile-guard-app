@@ -1,1 +1,1 @@
-web:ts-node/api/src/index.ts
+web: node start

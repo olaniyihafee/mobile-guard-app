@@ -3,7 +3,7 @@ import express from 'express'
 import session, { Store } from 'express-session'
 import { SESSION_OPTIONS } from './config'
 import { active, catchAsync, notFound, serverError } from './middleware'
-import { home, login, register } from './routes'
+import { home, login, register, test } from './routes'
 
 export const createApp = (store: Store) => {
     const app = express()
@@ -24,6 +24,8 @@ export const createApp = (store: Store) => {
     app.use(login)
     
     app.use(register)
+
+    app.use(test)
 
     app.use(notFound)
 
