@@ -14,6 +14,8 @@ import SplashScreen from './Screen/SplashScreen';
 import Auth from './Screen/Auth';
 import MainNavRoutes from './Screen/MainScreens/MainNavRoutes';
 
+import JoinNewGroup from './Screen/SignUpScreens/JoinNewGroup';
+
 const Stack = createStackNavigator();
 
 /* Switch Navigator for those screens which needs to be switched only once
@@ -21,7 +23,16 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SplashScreen">
+      <Stack.Navigator initialRouteName="JoinNewGroup">
+
+        {/* Navigation Drawer as a landing page */}
+        <Stack.Screen
+          name="MainRouJoinNewGrouptes"
+          component={JoinNewGroup}
+          // Hiding header for Navigation Drawer as we will use our custom header
+          options={{headerShown: false}}
+        />
+
         {/* SplashScreen which will come once for 5 Seconds */}
         <Stack.Screen
           name="SplashScreen"
@@ -35,13 +46,13 @@ const App = () => {
           component={Auth}
           options={{headerShown: false}}
         />
-        {/* Navigation Drawer as a landing page */}
+        {/* Navigation Drawer as a landing page 
         <Stack.Screen
           name="MainRoutes"
           component={MainNavRoutes}
           // Hiding header for Navigation Drawer as we will use our custom header
           options={{headerShown: false}}
-        />
+        />*/}
       </Stack.Navigator>
     </NavigationContainer>
   );

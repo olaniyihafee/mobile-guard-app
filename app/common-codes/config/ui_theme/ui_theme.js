@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native'
 
-export const PRIMARY_COLOR = `#FFFFFF`
-export const SECONDARY_COLOR = `#FFA500`
+export const PRIMARY_COLOR = `#FFFFFF` //white
+export const SECONDARY_COLOR = `#FFA500` //orange
 
 export const ui_theme = StyleSheet.create({
-    mainBody: {
+  mainBody: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ffffff',
@@ -18,7 +18,16 @@ export const ui_theme = StyleSheet.create({
     marginRight: 35,
     margin: 10,
   },
+  SectionStyleRowEvenlySpaced: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 20,
+    marginLeft: 35,
+    marginRight: 35,
+    margin: 10,
+  },
   SectionStyleColumn: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -26,6 +35,68 @@ export const ui_theme = StyleSheet.create({
     marginLeft: 35,
     marginRight: 35,
     margin: 10,
+  },  
+  SectionStyleCentered: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },  
+  SectionFloatRight: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    margin: 10,
+  }, 
+  Heading: {
+    fontSize: 40,
+    fontWeight: 300,
+    margin: 10,
+  },
+  SubHeading: {
+    fontSize: 30,
+    fontWeight: 600,
+    margin: 7,
+  },
+  SmallSubHeading: {
+    fontSize: 25,
+    fontWeight: 500,
+    margin: 7,
+  },
+  Paragraph: {
+    fontSize: 15,
+    textAlign: 'center',
+    marginLeft: '20%',
+    marginRight: '20%',
+  },
+  Span: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  SmallSpan: {
+    fontSize: 8,
+    fontColor: 'grey',
+    textAlign: 'center',
+  },
+  inputStyle: {
+    width: '90%',
+    height: '40px',
+    marginBottom: 40,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: '#dadae8',
+  },
+  demoImage: {
+    width: '100%',
+    height: '200px',
+    backgroundColor: 'green'
+  },
+  demoImageSmall: {
+    width: '100px',
+    height: '200px',
+    backgroundColor: 'green'
   },
   p_buttonStyle: {
     backgroundColor: '#FFFFFF',

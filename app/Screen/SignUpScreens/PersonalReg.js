@@ -108,7 +108,7 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
 
-            <View style={ui_theme.SectionStyleRow}>
+            <View style={ui_theme.SectionStyleColumn}>
               <TextInput
                 style={styles.inputStyle}
                 //onChangeText={(UserEmail) => setUserName(UserEmail)}
@@ -123,8 +123,7 @@ const LoginScreen = ({navigation}) => {
                 underlineColorAndroid="#f000"
                 blurOnSubmit={false}
               />
-            </View>
-            <View style={ui_theme.SectionStyleRow}>
+            
               <TextInput
                 style={styles.inputStyle}
                 //onChangeText={(UserPassword) => setUserPassword(UserPassword)}
@@ -138,8 +137,7 @@ const LoginScreen = ({navigation}) => {
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
-            </View>
-            <View style={ui_theme.SectionStyleRow}>
+            
               <TextInput
                 style={styles.inputStyle}
                 //onChangeText={(UserPassword) => setUserRetypedPassword(UserPassword)}
@@ -154,6 +152,25 @@ const LoginScreen = ({navigation}) => {
                 returnKeyType="next"
               />
             </View>
+
+            <View style={ui_theme.SectionStyleCentered}>
+              <TouchableOpacity
+                style={ui_theme.buttonStyle}
+                activeOpacity={0.5}
+                /* onPress={} */>
+                      <Image
+                        source={require('../../Image/success.png')}
+                        style={{
+                          width: 80,
+                          height: 80,
+                          resizeMode: 'contain',
+                          margin: 30,
+                        }}
+                      />
+              </TouchableOpacity>              
+            </View>
+
+
             <View style={ui_theme.SectionStyleRow}>
 
               <Text
@@ -234,8 +251,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputStyle: {
-    flex: 1,
-    color: 'white',
+    width: '90%',
+    height: '40px',
+    marginBottom: 40,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,

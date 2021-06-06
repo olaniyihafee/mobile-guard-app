@@ -1,7 +1,4 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
 
-// Import React and Component
 import React, {useState, createRef} from 'react';
 import {
   StyleSheet,
@@ -24,66 +21,10 @@ import API_URI from '../../common-codes/config/api'
 import {ui_theme} from '../../common-codes/config/ui_theme'
 
 const LoginScreen = ({navigation}) => {
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-
-  const passwordInputRef = createRef();
-
-  const handleSubmitPress = () => {
-    setErrortext('');
-    if (!userEmail) {
-      alert('Please fill Email');
-      return;
-    }
-    if (!userPassword) {
-      alert('Please fill Password');
-      return;
-    }
-    setLoading(true);
-    let dataToSend = {user_email: userEmail, user_password: userPassword};
-    let formBody = [];
-    for (let key in dataToSend) {
-      let encodedKey = encodeURIComponent(key);
-      let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch(API_URI, {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
-          navigation.replace('DrawerNavigationRoutes');
-        } else {
-          setErrortext('Please check your email id or password');
-          console.log('Please check your email id or password');
-        }
-      })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
-  };
+  
 
   return (
     <View style={ui_theme.mainBody}>
-      <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
@@ -92,7 +33,6 @@ const LoginScreen = ({navigation}) => {
           alignContent: 'center',
         }}>
 
-        <View>
           <KeyboardAvoidingView enabled>
             <View style={{alignItems: 'center'}}>
               <Image
@@ -106,41 +46,48 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
 
-            <View style={ui_theme.SectionStyleRow}>
+            <View style={ui_theme.SectionStyleCentered}>
+              <Text style={ui_theme.SubHeading}>
+                Login
+              </Text>
+            </View>               
+
+            <View style={ui_theme.SectionStyleColumn}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserEmail) => setUserEmail(UserEmail)}
-                placeholder="Enter Email" //dummy@abc.com
+                //onChangeText={(UserEmail) => setUserName(UserEmail)}
+                placeholder="Enter Your Name" //dummy@abc.com
                 placeholderTextColor="#8b9cb5"
                 autoCapitalize="none"
-                keyboardType="email-address"
+                keyboardType="default"
                 returnKeyType="next"
-                onSubmitEditing={() =>
-                  passwordInputRef.current && passwordInputRef.current.focus()
-                }
+                //onSubmitEditing={() =>
+                // passwordInputRef.current && passwordInputRef.current.focus()
+                //}
                 underlineColorAndroid="#f000"
                 blurOnSubmit={false}
               />
-            </View>
-            <View style={ui_theme.SectionStyleRow}>
+            
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                //onChangeText={(UserPassword) => setUserPassword(UserPassword)}
                 placeholder="Enter Password" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
-                ref={passwordInputRef}
+                //ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
+            
             </View>
+
             <View style={ui_theme.SectionStyleRow}>
               <Text
                 style={styles.registerTextStyle}
-                onPress={() => navigation.navigate('ForgotPassword')}>
+                /* onPress={() => navigation.navigate('ForgotPassword')} */>
                 forgot password
               </Text>
               <CheckBox
@@ -148,9 +95,6 @@ const LoginScreen = ({navigation}) => {
                 forgot password
               </CheckBox>
             </View>
-            {errortext != '' ? (
-              <Text style={styles.errorTextStyle}> {errortext} </Text>
-            ) : null}
 
             
 
@@ -159,20 +103,20 @@ const LoginScreen = ({navigation}) => {
               <TouchableOpacity
                 style={ui_theme.s_buttonStyle}
                 activeOpacity={0.5}
-                onPress={() => navigation.navigate('SignUpScreen')}>
+                /* onPress={() => navigation.navigate('SignUpScreen')} */>
                 <Text style={ui_theme.s_buttonTextStyle}>Sign Up</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={ui_theme.p_buttonStyle}
                 activeOpacity={0.5}
-                onPress={() => navigation.navigate('MainNavRoutes')}>
+                /* onPress={() => navigation.navigate('MainNavRoutes')} */>
                 <Text style={ui_theme.p_buttonTextStyle}>Ok</Text>
               </TouchableOpacity>
               
             </View>
             
           </KeyboardAvoidingView>
-        </View>
+        
       </ScrollView>
     </View>
   );
@@ -213,8 +157,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputStyle: {
-    flex: 1,
-    color: 'white',
+    width: '90%',
+    height: '40px',
+    marginBottom: 40,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
