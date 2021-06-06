@@ -10,7 +10,8 @@ const {
 } = process.env
 
 const mongo_uri_from_heroku: any = process.env.MONGODB_URI
-export const MONGO_URI = mongo_uri_from_heroku
+export const MONGO_URI = `mongodb://localhost:27017/juniper?authSource=jumong`
+//export const MONGO_URI = mongo_uri_from_heroku
 //`mongodb+srv://admin:8TKZZEKCtooCv3okgit@cluster0.1cuub.mongodb.net/auth?retryWrites=true&w=majority`
 //export const MONGO_URI = `mongodb+srv://<username>:<password>@cluster0.1cuub.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 //export const MONGO_URI = `mongodb://root:secret@localhost:27017/auth?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false`
