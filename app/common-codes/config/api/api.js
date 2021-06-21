@@ -1,29 +1,17 @@
-export const API_URI = `https://localhost:3000`
+export const API_URI = `http://localhost:3000`
 
 
-let url ="http://localhost:3000/projects"
+let url ="http://localhost:3000"
 
-export const getRequest = async ( branch) => {
-    var read = await fetch( url + branch,{
-                  "method": 'GET',
-                  "headers": {
-                    "content-type": "application/json"
-                  },
-                })
+export const getRequest = async ( branch ) => {
+    var read = await fetch( url + branch)
       return read.json() 
 }
 
-export const PostRequest = () => {
-    fetch(url,{
-        "method": 'POST',
-        "headers": {
-          "content-type": "application/json"
-        },
-      })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        localStorage.setItem('my-test', JSON.stringify(response));
-      })
-      .catch(err => {console.log(err);}); 
+export const PostRequest = async ( branch, method, body ) => {
+  var read = await fetch( 'http://localhost:3000/register/personal_registration',{
+              "method": 'POST',
+              "body": body
+            })
+      return read.json()  
 }

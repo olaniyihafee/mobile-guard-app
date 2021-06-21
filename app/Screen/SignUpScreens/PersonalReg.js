@@ -3,6 +3,9 @@
 
 // Import React and Component
 import React, {useState, createRef} from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
+//import DocumentPicker from 'expo';
 import {
   StyleSheet,
   TextInput,
@@ -20,21 +23,54 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import Loader from '../Components/Loader';
 
-import API_URI from '../../common-codes/config/api'
+import { PostRequest } from '../../common-codes/config/api'
 import {ui_theme} from '../../common-codes/config/ui_theme'
 
-const LoginScreen = ({navigation}) => {
-  /*
-  const [setUserName, setUserName] = useState('');
+const PersonalReg = ({navigation}) => {
+
+  const [userAppelation, setUserAppelation] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userRetypedPassword, setUserRetypedPassword] = useState('');
+  const [userProfilePics, setUserProfilePics] = useState(false);
+
+ // const [isSelected, setUserProfilePics] = useState();
+
+  const [image, setImagePlaceholder] = useState();
+
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
 
-  const passwordInputRef = createRef();
+  const passwordInputRef = createRef(); 
 
+
+  const selectFile = async () => {
+    // Opening Document Picker to select one file
+    
+      const { type, uri } = await DocumentPicker.getDocumentAsync(
+        { type: "*/*", copyToCacheDirectory: true }
+      );
+      if (type==='cancel'){
+        return;
+      }
+     console.log('pickerResponse', uri)
+
+     try {
+       const fetchResponse = await fetch(uri)
+      console.log('fetchResponse', fetchResponse)
+      const blob =await fetchResponse.blob()
+      console.log('blob', blob)
+      setUserProfilePics(blob)
+      setImagePlaceholder(fetchResponse.url)
+     } catch (error){
+       console.log('ERR: ' + error.message)
+     }     
+  };
+  
+  
   const handleSubmitPress = () => {
-    setErrortext('');
+   setErrortext('');
     if (!userEmail) {
       alert('Please fill Email');
       return;
@@ -44,33 +80,29 @@ const LoginScreen = ({navigation}) => {
       return;
     }
     setLoading(true);
-    let dataToSend = {user_email: userEmail, user_password: userPassword};
-    let formBody = [];
-    for (let key in dataToSend) {
-      let encodedKey = encodeURIComponent(key);
-      let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
 
-    fetch(API_URI, {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
+    let formData = new FormData()
+
+        /* formData.append('appelation', userAppelation)*/
+        formData.append('name', userName)
+        formData.append('email', userEmail)
+        formData.append('password', userPassword)
+        formData.append('passwordConfirmation', userRetypedPassword) 
+        formData.append('multi-files', userProfilePics) 
+
+        console.log(...formData)
+        
+
+    PostRequest('/signup', 'POST', formData )
       .then((responseJson) => {
         //Hide Loader
-        setLoading(false);
+        //setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
-          navigation.replace('DrawerNavigationRoutes');
+        if (responseJson.message == 'OK') {
+          //AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+          //console.log(responseJson.data[0].user_id);
+          navigation.navigate('JoinNewGroup');
         } else {
           setErrortext('Please check your email id or password');
           console.log('Please check your email id or password');
@@ -78,11 +110,11 @@ const LoginScreen = ({navigation}) => {
       })
       .catch((error) => {
         //Hide Loader
-        setLoading(false);
+        //setLoading(false);
         console.error(error);
       });
-  };
-  */
+  }; 
+  
 
   return (
     <View style={ui_theme.mainBody}>
@@ -109,42 +141,67 @@ const LoginScreen = ({navigation}) => {
             </View>
 
             <View style={ui_theme.SectionStyleColumn}>
+
+            {/* <CheckBox
+
+              >
+              forgot password
+              </CheckBox>
+              <CheckBox
+                center
+                title='Click Here'
+                 checked={setUserAppelation('Mrs')} 
+              /> */}
+
               <TextInput
                 style={styles.inputStyle}
-                //onChangeText={(UserEmail) => setUserName(UserEmail)}
-                placeholder="Enter Your Name" //dummy@abc.com
-                placeholderTextColor="#8b9cb5"
-                autoCapitalize="none"
-                keyboardType="default"
-                returnKeyType="next"
-                //onSubmitEditing={() =>
-                // passwordInputRef.current && passwordInputRef.current.focus()
-                //}
-                underlineColorAndroid="#f000"
-                blurOnSubmit={false}
-              />
-            
-              <TextInput
-                style={styles.inputStyle}
-                //onChangeText={(UserPassword) => setUserPassword(UserPassword)}
-                placeholder="Enter Password" //12345
+                onChangeText={setUserName}
+                placeholder="Enter Username" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
-                //ref={passwordInputRef}
+                ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
+                          
+              <TextInput
+                style={styles.inputStyle}
+                onChangeText={setUserEmail}
+                placeholder="Enter Email" //12345
+                placeholderTextColor="#8b9cb5"
+                keyboardType="default"
+                ref={passwordInputRef}
+                onSubmitEditing={Keyboard.dismiss}
+                blurOnSubmit={false}
+                secureTextEntry={true}
+                underlineColorAndroid="#f000"
+                returnKeyType="next"
+              />
+
+              <TextInput
+                style={styles.inputStyle}
+                onChangeText={setUserPassword}
+                placeholder="Enter Password" //12345
+                placeholderTextColor="#8b9cb5"
+                keyboardType="default"
+                ref={passwordInputRef}
+                onSubmitEditing={Keyboard.dismiss}
+                blurOnSubmit={false}
+                secureTextEntry={true}
+                underlineColorAndroid="#f000"
+                returnKeyType="next"
+              />            
             
               <TextInput
                 style={styles.inputStyle}
-                //onChangeText={(UserPassword) => setUserRetypedPassword(UserPassword)}
+                onChangeText={setUserRetypedPassword}
                 placeholder="Retype Password" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
-                //ref={passwordInputRef}
+                ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
@@ -152,22 +209,35 @@ const LoginScreen = ({navigation}) => {
                 returnKeyType="next"
               />
             </View>
-
+ 
             <View style={ui_theme.SectionStyleCentered}>
               <TouchableOpacity
                 style={ui_theme.buttonStyle}
                 activeOpacity={0.5}
-                /* onPress={} */>
+                 onPress={selectFile}  >
+                  
+                   {image != null ? (
                       <Image
-                        source={require('../../Image/success.png')}
-                        style={{
-                          width: 80,
-                          height: 80,
-                          resizeMode: 'contain',
-                          margin: 30,
-                        }}
-                      />
-              </TouchableOpacity>              
+                      source={{uri: image}}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        resizeMode: 'contain',
+                        margin: 30,
+                      }}
+                    />
+                    ) :
+                    <Image
+                    source={require('../../Image/aboutreact.png')}
+                    style={{
+                      width: 80,
+                      height: 80,
+                      resizeMode: 'contain',
+                      margin: 30,
+                    }}
+                  /> }
+                      
+              </TouchableOpacity>      
             </View>
 
 
@@ -178,10 +248,10 @@ const LoginScreen = ({navigation}) => {
                 onPress={() => navigation.navigate('ForgotPassword')}>
                 forgot password
               </Text>
-              <CheckBox
+              {/* <CheckBox
                 style={styles.registerTextStyle}>
                 forgot password
-              </CheckBox>
+              </CheckBox> */}
 
             </View>
 
@@ -197,13 +267,15 @@ const LoginScreen = ({navigation}) => {
               <TouchableOpacity
                 style={ui_theme.s_buttonStyle}
                 activeOpacity={0.5}
+                handleSubmitPress
+                onPress={handleSubmitPress}
                 onPress={() => navigation.navigate('SignUpScreen')}>
                 <Text style={ui_theme.s_buttonTextStyle}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={ui_theme.p_buttonStyle}
                 activeOpacity={0.5}
-                onPress={() => navigation.navigate('MainNavRoutes')}>
+                onPress={handleSubmitPress}>
                 <Text style={ui_theme.p_buttonTextStyle}>Ok</Text>
               </TouchableOpacity>
               
@@ -215,7 +287,7 @@ const LoginScreen = ({navigation}) => {
     </View>
   );
 };
-export default LoginScreen;
+export default PersonalReg;
 
 const styles = StyleSheet.create({
   mainBody: {

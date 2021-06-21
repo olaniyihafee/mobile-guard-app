@@ -1,5 +1,4 @@
-
-import React, {useState, createRef} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -10,9 +9,12 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
+  FlatList,
+  SafeAreaView
 } from 'react-native';
 
-import { SearchBar, 
+import { 
+  SearchBar, 
   ListItem, 
   Avatar 
 } from 'react-native-elements';
@@ -23,67 +25,164 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../Components/Loader';
 
 import API_URI from '../../common-codes/config/api'
+import { getRequest } from '../../common-codes/config/api'
 import {ui_theme} from '../../common-codes/config/ui_theme'
 
 const JoinNewGroup = ({navigation}) => {
 
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [masterDataSource, setMasterDataSource] = useState([]);
+  const [image, setTestImage] = useState([]);
+  
+
   const list = [
     {
-    name: 'Amy Farha',
+    id: 'Amy Farha',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    title: 'Amy Farha'
     },
     {
-    name: 'Chris Jackson',
+      id: 'juniper lee',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    title: 'juniper lee'
     },
     {
-    name: 'Amy Farha',
+      id: 'alvin and the chip monk',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    title: 'alvin and the chip monk'
     },
     {
-    name: 'Chris Jackson',
+      id: 'gurumongo',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    title: 'gurumongo'
     },
     {
-    name: 'Amy Farha',
+      id: 'shevetlana',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    title: 'shevetlana'
     },
     {
-    name: 'Chris Jackson',
+      id: 'bruce almighthy',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    title: 'bruce almighthy'
     },
     {
-    name: 'Amy Farha',
+      id: 'lex luthor',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    title: 'lex luthor'
     },
     {
-    name: 'Chris Jackson',
+      id: 'Chris avans',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    title: 'Chris avans'
     },
     {
-    name: 'Amy Farha',
+      id: 'bondocks',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    title: 'bondocks'
     },
     {
-    name: 'Chris Jackson',
+      id: 'Chris Jackson',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    title: 'Chris Jackson'
     },
-    //...  more items
     ]
+
+    useEffect(() => {
+      getRequest('/getimages')
+        .then((responseJson) => {
+          console.log(responseJson);
+          const bou = responseJson;
+          console.log(bou)
+          setFilteredDataSource(bou);
+          setMasterDataSource(bou);
+          //setTestImage(bou);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  
+        //setFilteredDataSource(list);
+        //setMasterDataSource(list);
+    }, []); 
+
+    const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource
+      // Update FilteredDataSource
+      const newData = masterDataSource.filter(function (item) {
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(masterDataSource);
+      setSearch(text);
+    }
+  };
+
+  const ItemView = ({ item }) => {
+    return (
+      // Flat List Item
+      <View>
+        <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+          {item.message}
+          {/*{'.'}
+          {item.title.toUpperCase()}*/}
+        </Text> 
+        <Image
+          source={{uri: item.imgurl}}
+          style={{
+            width: 80,
+            height: 80,
+            resizeMode: 'contain',
+            margin: 30,
+          }}
+        /> 
+              
+      </View>
+    );
+  };
+
+  const ItemSeparatorView = () => {
+    return (
+      // Flat List Item Separator
+      <View
+        style={{
+          height: 0.5,
+          width: '100%',
+          backgroundColor: '#C8C8C8',
+        }}
+      />
+    );
+  };
+
+  const getItem = (item) => {
+    // Function for click on an item
+    alert('Id : ' + item.id + ' Title : ' + item.title);
+  };
     
 
   return (
-    <View style={{ flex: 1, height}}>
+    <View style={{ flex: 1}}>
+      <Image
+          source={{uri: image}}
+          style={{
+            width: 80,
+            height: 80,
+            resizeMode: 'contain',
+            margin: 30,
+          }}
+        /> 
       
         
           <KeyboardAvoidingView enabled>
@@ -111,31 +210,30 @@ const JoinNewGroup = ({navigation}) => {
               <SearchBar
                 placeholder="Type Here..."
                 /*onChangeText={this.updateSearch}
-                 value={search} */
-                />     
+                 value={search}  */
+               />     
             </View> 
             
             </View>           
             
-            <ScrollView
-            scrollEnabled={true}
-              contentContainerStyle={{
-              flex: 1,
-              justifyContent: 'center',
-              alignContent: 'center',
-            }}>
-              {
-                list.map((l, i) => (
-                  <ListItem key={i} bottomDivider>
-                    <Avatar source={{uri: l.avatar_url}} />
-                    <ListItem.Content>
-                      <ListItem.Title>{l.name}</ListItem.Title>
-                      <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
-                ))
-              }
-            </ScrollView>
+            <SafeAreaView style={{ flex: 1 }}>
+              <View style={styles.container}>
+                <SearchBar
+                  round
+                  searchIcon={{ size: 24 }}
+                  onChangeText={(text) => searchFilterFunction(text)}
+                  onClear={(text) => searchFilterFunction('')}
+                  placeholder="Type Here..."
+                  value={search}
+                />
+                <FlatList
+                  data={filteredDataSource}
+                  keyExtractor={(item, index) => index.toString()}
+                  ItemSeparatorComponent={ItemSeparatorView}
+                  renderItem={ItemView}
+                />
+              </View>
+            </SafeAreaView>
 
             <Text
               style={styles.registerTextStyle}
@@ -205,3 +303,182 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+ 
+
+/* import React, { useState, useEffect } from 'react';
+
+// import all the components we are going to use
+import { SafeAreaView, Text, StyleSheet, View, FlatList, Image, Button } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+
+const App = () => {
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [masterDataSource, setMasterDataSource] = useState([]);
+
+
+  const list = [
+    {
+    id: 'Amy Farha',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    title: 'Amy Farha'
+    },
+    {
+      id: 'juniper lee',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    title: 'juniper lee'
+    },
+    {
+      id: 'alvin and the chip monk',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    title: 'alvin and the chip monk'
+    },
+    {
+      id: 'gurumongo',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    title: 'gurumongo'
+    },
+    {
+      id: 'shevetlana',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    title: 'shevetlana'
+    },
+    {
+      id: 'bruce almighthy',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    title: 'bruce almighthy'
+    },
+    {
+      id: 'lex luthor',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    title: 'lex luthor'
+    },
+    {
+      id: 'Chris avans',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    title: 'Chris avans'
+    },
+    {
+      id: 'bondocks',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    title: 'bondocks'
+    },
+    {
+      id: 'Chris Jackson',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    title: 'Chris Jackson'
+    },
+    ]
+
+   useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setFilteredDataSource(responseJson);
+        setMasterDataSource(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      setFilteredDataSource(list);
+        setMasterDataSource(list);
+  }, []); 
+
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource
+      // Update FilteredDataSource
+      const newData = masterDataSource.filter(function (item) {
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(masterDataSource);
+      setSearch(text);
+    }
+  };
+
+  const ItemView = ({ item }) => {
+    return (
+      // Flat List Item
+      <View>
+        <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+          {item.id}
+          {'.'}
+          {item.title.toUpperCase()}
+        </Text>
+        <Button> this is the end</Button>
+        <Image
+          source={require('../../Image/aboutreact.png')}
+          style={{
+            width: 80,
+            height: 80,
+            resizeMode: 'contain',
+            margin: 30,
+          }}
+        />
+      </View>
+    );
+  };
+
+  const ItemSeparatorView = () => {
+    return (
+      // Flat List Item Separator
+      <View
+        style={{
+          height: 0.5,
+          width: '100%',
+          backgroundColor: '#C8C8C8',
+        }}
+      />
+    );
+  };
+
+  const getItem = (item) => {
+    // Function for click on an item
+    alert('Id : ' + item.id + ' Title : ' + item.title);
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <SearchBar
+          round
+          searchIcon={{ size: 24 }}
+          onChangeText={(text) => searchFilterFunction(text)}
+          onClear={(text) => searchFilterFunction('')}
+          placeholder="Type Here..."
+          value={search}
+        />
+        <FlatList
+          data={filteredDataSource}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorView}
+          renderItem={ItemView}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+  },
+  itemStyle: {
+    padding: 10,
+  },
+});
+
+export default App;
+ */

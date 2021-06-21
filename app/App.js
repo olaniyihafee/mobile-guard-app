@@ -14,7 +14,8 @@ import SplashScreen from './Screen/SplashScreen';
 import Auth from './Screen/Auth';
 import MainNavRoutes from './Screen/MainScreens/MainNavRoutes';
 
-import JoinNewGroup from './Screen/SignUpScreens/JoinNewGroup';
+import PersonalReg from './Screen/SignUpScreens/PersonalReg';
+import FormNewGroup from './Screen/SignUpScreens/FormNewGroup';
 
 const Stack = createStackNavigator();
 
@@ -23,12 +24,12 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="JoinNewGroup">
+      <Stack.Navigator initialRouteName="FormNewGroup">
 
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
-          name="MainRouJoinNewGrouptes"
-          component={JoinNewGroup}
+          name="FormNewGroup"
+          component={FormNewGroup}
           // Hiding header for Navigation Drawer as we will use our custom header
           options={{headerShown: false}}
         />

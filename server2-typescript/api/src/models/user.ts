@@ -14,7 +14,8 @@ const userSchema = new Schema({
     appelation: String,
     email: String,
     name: String,
-    password: String
+    password: String,
+    profilePicture: String
 }, {
     timestamps: true
 })

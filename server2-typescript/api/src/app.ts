@@ -3,10 +3,12 @@ import express from 'express'
 import session, { Store } from 'express-session'
 import { SESSION_OPTIONS } from './config'
 import { active, catchAsync, notFound, serverError } from './middleware'
-import { home, login, register, test } from './routes'
+import { you, notifications, groups, home, login, register, test } from './routes'
 
 export const createApp = (store: Store) => {
     const app = express()
+
+    app.use(express.urlencoded({ extended: true }));
 
     app.use(express.json())
 
@@ -18,6 +20,12 @@ export const createApp = (store: Store) => {
     )
 
     app.use(catchAsync(active))
+    
+    app.use(you)
+
+    app.use(notifications)
+    
+    app.use(groups)
 
     app.use(home)
 
