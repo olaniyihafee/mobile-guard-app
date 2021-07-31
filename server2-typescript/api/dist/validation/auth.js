@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginSchema = exports.registerSchema = void 0;
-const joi_1 = __importDefault(require("@hapi/joi"));
+const joi_1 = __importDefault(require("joi"));
 const config_1 = require("../config");
 const email = joi_1.default.string().email().min(8).max(254).lowercase().trim().required();
 const name = joi_1.default.string().min(3).max(128).trim().required();

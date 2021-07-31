@@ -1,0 +1,1 @@
+{"version":3,"file":"locationGroup.js","sourceRoot":"","sources":["../../src/models/locationGroup.ts"],"names":[],"mappings":";;;AAAA,uCAA4D;AAG5D,MAAM,mBAAmB,GAAG,IAAI,iBAAM,CAAC;IACnC,QAAQ,EAAE,MAAM;IAChB,YAAY,EAAE,MAAM;IACpB,WAAW,EAAE,MAAM;CACtB,EAAE;IACC,UAAU,EAAE,IAAI;CACnB,CAAC,CAAA;AAIW,QAAA,aAAa,GAAG,gBAAK,CAAC,eAAe,EAAE,mBAAmB,CAAC,CAAA"}

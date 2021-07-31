@@ -8,7 +8,9 @@ const userSchema = new mongoose_1.Schema({
     appelation: String,
     email: String,
     name: String,
-    password: String
+    password: String,
+    profilePicture: String,
+    posts: [String],
 }, {
     timestamps: true
 });

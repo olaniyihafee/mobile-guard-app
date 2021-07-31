@@ -1,5 +1,5 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
+
+import * as DocumentPicker from 'expo-document-picker';
 
 // Import React and Component
 import React, {useState, createRef} from 'react';
@@ -12,7 +12,7 @@ import {
   Image,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView, CheckBox
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -20,15 +20,66 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../Components/Loader';
 
 import API_URI from '../../common-codes/config/api'
+import { PostRequest } from '../../common-codes/config/api'
 import {ui_theme} from '../../common-codes/config/ui_theme'
 
-const FormNewGroup = ({navigation}) => {
+const FormNewGroup = ({route, navigation}) => {
 
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  /* const { userEmail } = route.params */
 
-  const [userProfilePics, setUserProfilePics] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [about, setGroupAbout] = useState('');
+  const [groupProfilePic, setGroupProfilePic] = useState('');
+  
   const [image, setImagePlaceholder] = useState();
+
+  const [errortext, setErrortext] = useState('');
+
+  const submitNewGroup = async () => {
+
+    console.log('it entered submit new Group area')
+
+    setErrortext('');
+    if (!groupName) {
+      alert('Please fill Group Name');
+      return;
+    }
+    if (!about) {
+      alert('Please fill About Section');
+      return;
+    }
+    //setLoading(true);
+
+    let formData = new FormData()
+
+        /* formData.append('appelation', userAppelation)*/
+        formData.append('name', groupName)
+        formData.append('about', about)        
+        /* formData.append('email', userEmail) */
+        formData.append('multi-files', groupProfilePic) 
+
+        console.log(...formData)
+        
+
+    PostRequest('/register/form_new_group', formData )
+      .then((responseJson) => {
+        //Hide Loader
+        //setLoading(false);
+        console.log(responseJson);
+        // If server response message same as Data Matched
+        if (responseJson.message == 'OK') {
+          navigation.navigate('MainNavRoutes');
+        } else {
+          setErrortext('Pick a Different Group Name');
+          console.log('Please check your email id or password');
+        }
+      })
+      .catch((error) => {
+        //Hide Loader
+        //setLoading(false);
+        console.error(error);
+      });
+  }
 
   const selectFile = async () => {
     // Opening Document Picker to select one file
@@ -46,7 +97,7 @@ const FormNewGroup = ({navigation}) => {
       console.log('fetchResponse', fetchResponse)
       const blob =await fetchResponse.blob()
       console.log('blob', blob)
-      setUserProfilePics(blob)
+      setGroupProfilePic(blob)
       setImagePlaceholder(fetchResponse.url)
      } catch (error){
        console.log('ERR: ' + error.message)
@@ -68,13 +119,16 @@ const FormNewGroup = ({navigation}) => {
             <View style={{alignItems: 'center'}}>
               <Text style={ui_theme.SubHeading}>
                 Create New Group
-              </Text>  
+              </Text> 
             </View>
 
             <View style={ui_theme.SectionStyleColumn}>
+            {errortext != '' ? (
+              <Text style={styles.errorTextStyle}> {errortext} </Text>
+            ) : null} 
             <TextInput
                 style={styles.inputStyle}
-                /* onChangeText={setUserEmail} */
+                onChangeText={setGroupName} 
                 placeholder="Enter Group Name" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
@@ -87,7 +141,7 @@ const FormNewGroup = ({navigation}) => {
 
               <TextInput
                 style={styles.textAreaStyle}
-               /*  onChangeText={setUserPassword} */
+                onChangeText={setGroupAbout} 
                 placeholder="Enter What Group is About" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
@@ -99,6 +153,10 @@ const FormNewGroup = ({navigation}) => {
                 multiline={true}
                 numberOfLines={4}
               />            
+            </View>
+
+            <View style={ui_theme.SectionStyleColumn}>
+              <Text style={ui_theme.SmallSubHeading}>Profile Picture</Text>
             </View>
 
             <View style={ui_theme.SectionStyleCentered}>
@@ -136,7 +194,7 @@ const FormNewGroup = ({navigation}) => {
               <TouchableOpacity
                 style={ui_theme.p_buttonStyle}
                 activeOpacity={0.5}
-                onPress={() => navigation.navigate('MainNavRoutes')}>
+                onPress={() => submitNewGroup()}>
                 <Text style={ui_theme.p_buttonTextStyle}>Submit</Text>
               </TouchableOpacity>  
               <TouchableOpacity

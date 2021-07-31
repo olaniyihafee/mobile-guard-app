@@ -1,5 +1,5 @@
 
-import React, {useState, createRef} from 'react';
+import React, {useState, useEffect , createRef} from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -17,11 +17,69 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import Loader from '../Components/Loader';
 
+import { PostRequest } from '../../common-codes/config/api'
+
 import API_URI from '../../common-codes/config/api'
 import {ui_theme} from '../../common-codes/config/ui_theme'
 
 const LoginScreen = ({navigation}) => {
-  
+
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [errortext, setErrortext] = useState('');
+
+  const handleSubmitPress = () => {
+    setErrortext('');
+     if (!userEmail) {
+       alert('Please fill Email');
+       return;
+     }
+     if (!userPassword) {
+       alert('Please fill Password');
+       return;
+     }
+     setLoading(true);
+ 
+     let formData = new FormData()
+ 
+         /* formData.append('appelation', userAppelation)*/
+         formData.append('name', userName)
+         formData.append('email', userEmail)
+         formData.append('password', userPassword)
+ 
+         console.log(...formData)
+         
+ 
+     PostRequest('/login', formData )
+       .then((responseJson) => {
+         //Hide Loader
+         //setLoading(false);
+         console.log(responseJson);
+         // If server response message same as Data Matched
+         if (responseJson.message == 'OK') {
+           //AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+           //console.log(responseJson.data[0].user_id);
+           navigation.navigate('JoinNewGroup');
+         } 
+         else if (responseJson.message == 'You are already logged in') {
+          //AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+          //console.log(responseJson.data[0].user_id);
+          navigation.navigate('JoinNewGroup',{ userEmail });
+        }
+        else {
+           setErrortext('Please check your email id or password or signup');
+           console.log('Please check your email id or password');
+         }
+       })
+       .catch((error) => {
+         //Hide Loader
+         //setLoading(false);
+         console.error(error);
+       });
+   };    
 
   return (
     <View style={ui_theme.mainBody}>
@@ -55,8 +113,23 @@ const LoginScreen = ({navigation}) => {
             <View style={ui_theme.SectionStyleColumn}>
               <TextInput
                 style={styles.inputStyle}
-                //onChangeText={(UserEmail) => setUserName(UserEmail)}
+                onChangeText={setUserName}
                 placeholder="Enter Your Name" //dummy@abc.com
+                placeholderTextColor="#8b9cb5"
+                autoCapitalize="none"
+                keyboardType="default"
+                returnKeyType="next"
+                //onSubmitEditing={() =>
+                // passwordInputRef.current && passwordInputRef.current.focus()
+                //}
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
+              />
+
+              <TextInput
+                style={styles.inputStyle}
+                onChangeText={setUserEmail}
+                placeholder="Enter Your Email" //dummy@abc.com
                 placeholderTextColor="#8b9cb5"
                 autoCapitalize="none"
                 keyboardType="default"
@@ -70,7 +143,7 @@ const LoginScreen = ({navigation}) => {
             
               <TextInput
                 style={styles.inputStyle}
-                //onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                onChangeText={setUserPassword}
                 placeholder="Enter Password" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
@@ -81,6 +154,7 @@ const LoginScreen = ({navigation}) => {
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
+
             
             </View>
 
@@ -95,21 +169,23 @@ const LoginScreen = ({navigation}) => {
                 forgot password
               </CheckBox>
             </View>
-
             
+            {errortext != '' ? (
+              <Text style={styles.errorTextStyle}> {errortext} </Text>
+            ) : null}
 
             <View style={ui_theme.SectionStyleRow}>    
 
               <TouchableOpacity
                 style={ui_theme.s_buttonStyle}
                 activeOpacity={0.5}
-                /* onPress={() => navigation.navigate('SignUpScreen')} */>
+                onPress={() => navigation.navigate('SignUpScreen')} >
                 <Text style={ui_theme.s_buttonTextStyle}>Sign Up</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={ui_theme.p_buttonStyle}
-                activeOpacity={0.5}
-                /* onPress={() => navigation.navigate('MainNavRoutes')} */>
+                activeOpacity={0.5}                
+                onPress={handleSubmitPress}>
                 <Text style={ui_theme.p_buttonTextStyle}>Ok</Text>
               </TouchableOpacity>
               

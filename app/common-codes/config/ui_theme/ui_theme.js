@@ -12,7 +12,6 @@ export const ui_theme = StyleSheet.create({
   },
   SectionStyleRow: {
     flexDirection: 'row',
-    height: 40,
     marginTop: 20,
     marginLeft: 35,
     marginRight: 35,
@@ -48,6 +47,8 @@ export const ui_theme = StyleSheet.create({
     justifyContent: 'flex-end',
     margin: 10,
   }, 
+
+
   Heading: {
     fontSize: 40,
     fontWeight: 300,
@@ -57,6 +58,7 @@ export const ui_theme = StyleSheet.create({
     fontSize: 30,
     fontWeight: 600,
     margin: 7,
+    marginBottom: 15
   },
   SmallSubHeading: {
     fontSize: 25,
@@ -78,6 +80,8 @@ export const ui_theme = StyleSheet.create({
     fontColor: 'grey',
     textAlign: 'center',
   },
+
+
   inputStyle: {
     width: '90%',
     height: '40px',
@@ -88,6 +92,8 @@ export const ui_theme = StyleSheet.create({
     borderRadius: 30,
     borderColor: '#dadae8',
   },
+
+
   demoImage: {
     width: '100%',
     height: '200px',
@@ -98,6 +104,12 @@ export const ui_theme = StyleSheet.create({
     height: '200px',
     backgroundColor: 'green'
   },
+
+  searchBar: {
+    minHeight: 50,
+  },
+
+
   p_buttonStyle: {
     backgroundColor: '#FFFFFF',
     borderWidth: 2,

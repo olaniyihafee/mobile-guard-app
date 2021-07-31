@@ -8,7 +8,7 @@ router.get('/groups', auth, catchAsync(async (req, res) => {
     res.json(await User.findById(req.session!.userId))
 }))
 
-router.get('/groups/groupname', auth, catchAsync(async (req, res) => {
+router.get('/groups/eachgroup', auth, catchAsync(async (req, res) => {
     res.json(await User.findById(req.session!.userId))
 }))
 

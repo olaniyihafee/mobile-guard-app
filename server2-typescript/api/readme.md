@@ -46,6 +46,11 @@ curl -v -F email=alexa@gmail.com -F name=alexa -F files=@\"C:/Users/ABDULLAHI/Do
 
     $ git remote add origin https://github.com/username/new_repo
 
-    git subtree add --prefix subtreeDirectory https://github.com/newfivefour/vimrc.git master
-    git subtree push --prefix subtreeDirectory https://github.com/newfivefour/vimrc.git master
+    git subtree add --prefix subtreeDirectory https://github.com/olaniyihafee/mobile-guard-app.git master
+    git subtree push --prefix subtreeDirectory https://github.com/olaniyihafee/mobile-guard-app.git master
+
+    git subtree add --prefix server2-typescript https://github.com/olaniyihafee/mobile-guard-app.git master
+    git subtree push --prefix server2-typescript https://github.com/olaniyihafee/mobile-guard-app.git master
+
+    git subtree push --prefix my-app heroku master
 ```

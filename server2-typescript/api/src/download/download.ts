@@ -1,162 +1,129 @@
-const {MongoClient} = require('mongodb')
+import { object } from 'joi';
+import mongoose, { Schema, model, Document } from 'mongoose'
 
-export const getFile = async (req: any, res: any) => {  
-    //Accepting user input directly is very insecure and should      
-    //never be allowed in a production app.  
-    //Sanitize the input before accepting it  
-    //This is for demonstration purposes only  
-    
-    let fileName = req.body.text1;  
-    
-    //Connect to the MongoDB client
-   
-      await MongoClient.connect("mongodb://localhost:27017/juniper", async (err: any, client: any) => {
-          if(err){      
-           return res.render('index', 
-            {
-            title: 'Uploaded Error', 
-            message: 'MongoClient Connection error', error: err.errMsg});    
-               }  
+export const sortFromDb = async ( TheCollection: any, lastCount: number ) => {
+  
+  let Count;  //variable to collect the number of past collection
 
-      const db = client.db('juniper');
-      const collection = await db.collection('photos.files');    
-      const collectionChunks = await db.collection('photos.chunks');
-   collection.find({}).toArray(function(err: any, docs: any){        
-      if(err){        
-        return res.render('index', {
-         title: 'File error', 
-         message: 'Error finding file', 
-          error: err.errMsg});      
-      }
+  if(!lastCount){ Count = 0} //last collected is empty
+  else{ Count = lastCount} //if there is value for last collected
+
+  const SortedRange = await TheCollection.find().skip( await TheCollection.count() - lastCount)
+
+  return SortedRange
+
+}
+
+export const sortFromDb = async ( TheCollection: any, lastCount: number ) => {
+  
+  let Count;  //variable to collect the number of past collection
+
+  if(!lastCount){ Count = 0} //last collected is empty
+  else{ Count = lastCount} //if there is value for last collected
+
+  const placeHolder = []
+  forEach((EachCollection) => {
+
+    const SortedValue = await EachCollection.find()
+
+    placeHolder.push( SortedValue )
+  })
+
+  const SortedRange = await TheCollection.find().skip( await TheCollection.count() - lastCount)
+
+  return SortedRange
+
+}
+
+export const collect_and_attach_imgs_and_files = async (usedList: [], collectionName: String) => {
+
+ /* const experiment = model('photos.files', new Schema({}), 'photos.files')
+   const experiment = mongoose.Collection.
+  //.db('juniper').collection('photos.files')
+  const result = await experiment.find({})
+
+  console.log(result) }*/
+
+  let CollectionName
+  let finalFile: any = [];
+  
+  const collection = model(`${collectionName}.files`, new Schema({}));    
+  const collectionChunks = model(`${collectionName}.chunks`, new Schema({}));
+
+  let placeholder: any = []
+  usedList.forEach((x: any,i)=>{
+    placeholder.push(x.groupPicture)
+    //console.log(...placeholder)
+  })
+
+  console.log("...usedList: "+ [...placeholder])
+
+ await collection.find({_id: {$in: [...placeholder]}}).then(
+  async ( docs: any) =>{        
+      
     if(!docs || docs.length === 0){        
-      return res.render('index', {
+      return {
        title: 'Download Error', 
-       message: 'No file found'});      
+       message: 'No file found'};      
      }else{
+
+      let placeholder: any = []
+        docs.forEach((x: any,i: any)=>{
+          placeholder.push(x._id)
+          //console.log(...placeholder)
+        })
+
+        console.log("...docs: "+ [...placeholder])
     
       //Retrieving the chunks from the db          
-      collectionChunks.find({})
-       .sort({n: 1}).toArray(function(err: any, chunks: any){          
-         if(err){            
-            return res.render('index', {
-             title: 'Download Error', 
-             message: 'Error retrieving chunks', 
-             error: err.errmsg});          
-          }
+      await collectionChunks.find({files_id: {$in: [...placeholder]}}).then((chunks: any)=>{          
+         
         if(!chunks || chunks.length === 0){            
           //No data found            
-          return res.render('index', {
+          return {
              title: 'Download Error', 
-             message: 'No data found'});          
+             message: 'No data found'};          
         }
      
-       
+        //console.log(chunks)
      let fileData = [];          
       for(let i=0; i<chunks.length;i++){            
         //This is in Binary JSON or BSON format, which is stored               
         //in fileData array in base64 endocoded string format               
        
-        fileData.push(chunks[i].data.toString('base64'));  
+        //fileData.push(chunks[i].data.toString('base64')); 
+        
+        fileData.push(chunks[i]._doc.data.toString('base64'));
 
+        //console.log(Object.keys(chunks[i]))
+        //const boy: any = Object.values(chunks[i])
+        //console.log(boy[3].data.toString('base64'))
       }
       
-      let finalFile = []; 
+       
       for(let i=0; i<fileData.length; i++){            
         //This is in Binary JSON or BSON format, which is stored               
         //in fileData array in base64 endocoded string format 
 
-        let theFile = 'data:' + docs[i].contentType + ';base64,' 
-        + fileData.join('')
+        let theFile = 'data:' + docs[i]._doc.contentType + ';base64,' 
+        + fileData[i]
 
-        finalFile.push({
-          title: 'Image File', 
-          message: 'Image loaded from MongoDB GridFS', 
-          imgurl: theFile
+        finalFile.push({ 
+          theFile
         });
-        //console.log(finalFile[i])
-        
-
-        //res.send({imgurl: finalFile})  
       }
-      res.send(finalFile)
+       });      
+      }           
+     }); 
+
+  
+     return finalFile 
          
-       });       
-      }          
-     });   
-   });
-  }; 
+
+}
 
 /* 
-module.exports.getFile = async (req, res) => {  
-    //Accepting user input directly is very insecure and should      
-    //never be allowed in a production app.  
-    //Sanitize the input before accepting it  
-    //This is for demonstration purposes only  
-    
-    let fileName = req.body.text1;  
-    
-    //Connect to the MongoDB client
-   
-      await MongoClient.connect("mongodb://localhost:27017/juniper", async (err, client) => {
-          if(err){      
-           return res.render('index', 
-            {
-            title: 'Uploaded Error', 
-            message: 'MongoClient Connection error', error: err.errMsg});    
-               }  
 
-      const db = client.db('juniper');
-      const collection = await db.collection('photos.files');    
-      const collectionChunks = await db.collection('photos.chunks');
-   collection.find({filename: '1621793709459-bezkoder-f3.jpg'}).toArray(function(err, docs){        
-      if(err){        
-        return res.render('index', {
-         title: 'File error', 
-         message: 'Error finding file', 
-          error: err.errMsg});      
-      }
-    if(!docs || docs.length === 0){        
-      return res.render('index', {
-       title: 'Download Error', 
-       message: 'No file found'});      
-     }else{
-    
-      //Retrieving the chunks from the db          
-     collectionChunks.find({files_id : docs[0]._id})
-       .sort({n: 1}).toArray(function(err, chunks){          
-         if(err){            
-            return res.render('index', {
-             title: 'Download Error', 
-             message: 'Error retrieving chunks', 
-             error: err.errmsg});          
-          }
-        if(!chunks || chunks.length === 0){            
-          //No data found            
-          return res.render('index', {
-             title: 'Download Error', 
-             message: 'No data found'});          
-        }
-     
-      let fileData = [];          
-      for(let i=0; i<chunks.length;i++){            
-        //This is in Binary JSON or BSON format, which is stored               
-        //in fileData array in base64 endocoded string format               
-       
-        fileData.push(chunks[i].data.toString('base64'));  
-        
-        
-      }
-       
-       //Display the chunks using the data URI format          
-       let finalFile = 'data:' + docs[0].contentType + ';base64,' 
-            + fileData.join(''); 
-            //res.send({imgurl: finalFile})  
-        /* res.render('imageView', {
-           title: 'Image File', 
-           message: 'Image loaded from MongoDB GridFS', 
-           imgurl: finalFile});*/
-      /* });      
-      }          
-     });   
-   });
-  }; */
+ */
+
+ 

@@ -93,7 +93,7 @@ const PersonalReg = ({navigation}) => {
         console.log(...formData)
         
 
-    PostRequest('/signup', 'POST', formData )
+    PostRequest('/register/personal_registration', 'POST', formData )
       .then((responseJson) => {
         //Hide Loader
         //setLoading(false);
@@ -162,7 +162,6 @@ const PersonalReg = ({navigation}) => {
                 ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
-                secureTextEntry={true}
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
@@ -176,7 +175,6 @@ const PersonalReg = ({navigation}) => {
                 ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
-                secureTextEntry={true}
                 underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
