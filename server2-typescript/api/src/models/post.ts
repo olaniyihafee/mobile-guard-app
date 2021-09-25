@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Document } from 'mongoose'
 
 
-const postSchema = new Schema({
+export const postSchema = new Schema({
     byemail: String,
     about: String,
     images: [String],

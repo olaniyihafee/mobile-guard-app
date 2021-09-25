@@ -10,40 +10,27 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Groups from './GroupsScreens/Groups';
 import EachGroup from './GroupsScreens/EachGroup';
 
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../../../common-codes/config/ui_theme'
+
 const Stack = createStackNavigator();
 
 const GroupsNavRoutes = () => {
   // Stack Navigator for Login and Sign up Screen
   return (
-    <Stack.Navigator initialRouteName="Groups">      
+    <Stack.Navigator initialRouteName="Groups"screenOptions={{
+      headerMode: 'screen',
+      headerTintColor: SECONDARY_COLOR,
+      headerStyle: { backgroundColor: 'white' },
+    }}
+  >          
       <Stack.Screen
         name="Groups"
         component={Groups}
-        options={{
-          title: 'Groups', //Set Header Title
-          headerStyle: {
-            backgroundColor: '#307ecc', //Set Header color
-          },
-          headerTintColor: '#fff', //Set Header text color
-          headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
-          },
-        }}
       />
 
     <Stack.Screen
             name="EachGroup"
             component={EachGroup}
-            options={{
-              title: 'EachGroup', //Set Header Title
-              headerStyle: {
-                backgroundColor: '#307ecc', //Set Header color
-              },
-              headerTintColor: '#fff', //Set Header text color
-              headerTitleStyle: {
-                fontWeight: 'bold', //Set Header text style
-              },
-            }}
           />
     </Stack.Navigator>
   );

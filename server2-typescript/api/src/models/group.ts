@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Document } from 'mongoose'
 
 
-const groupSchema = new Schema({    
+export const groupSchema = new Schema({    
     name: String,
     groupPicture: String,
     groupPictureThumbnail: String,

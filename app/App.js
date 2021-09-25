@@ -24,11 +24,11 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="New">
+      <Stack.Navigator initialRouteName="MainNavRoutes">
 
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
-          name="New"
+          name="MainNavRoutes"
           component={New}
           // Hiding header for Navigation Drawer as we will use our custom header
           options={{headerShown: false}}

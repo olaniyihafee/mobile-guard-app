@@ -62,12 +62,12 @@ const LoginScreen = ({navigation}) => {
          if (responseJson.message == 'OK') {
            //AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
            //console.log(responseJson.data[0].user_id);
-           navigation.navigate('JoinNewGroup');
+           navigation.navigate('MainNavRoutes');
          } 
          else if (responseJson.message == 'You are already logged in') {
           //AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
           //console.log(responseJson.data[0].user_id);
-          navigation.navigate('JoinNewGroup',{ userEmail });
+          navigation.navigate('MainNavRoutes',{ userEmail });
         }
         else {
            setErrortext('Please check your email id or password or signup');

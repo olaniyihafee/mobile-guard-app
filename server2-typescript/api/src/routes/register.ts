@@ -8,8 +8,8 @@ import { sortFromDb, collect_and_attach_imgs_and_files } from '../download'
 
 const router = Router()
 
-router.post('/register/personal_registration', guest, uploadUserFiles, catchAsync(async (req, res) => {
-    console.log(req)
+router.post('/register/personal_registration', uploadUserFiles, catchAsync(async (req, res) => {
+    //console.log(req)
     await validate(registerSchema, req.body)
     console.log('HIT')
     
@@ -43,8 +43,10 @@ router.post('/register/personal_registration', guest, uploadUserFiles, catchAsyn
     const { listLengthSoFar } = req.body //collect length of the quantity of groups shown to user so far if any
 
     const groupList = await sortFromDb( Group, listLengthSoFar) //collect new list
+
+    let groupPicture :any 
  
-    const getSortedGroups: any = await collect_and_attach_imgs_and_files(groupList, 'Group')  //collecting imgs belonging to groups from groups collection
+    const getSortedGroups: any = await collect_and_attach_imgs_and_files(groupList, 'Group', 'groupPicture')  //collecting imgs belonging to groups from groups collection
 
     //attaching imgs to lists
     groupList.forEach((x: any,i: any)=>{

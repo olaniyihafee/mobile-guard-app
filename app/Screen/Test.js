@@ -1,136 +1,233 @@
 
-import React, { Component, useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Alert,
-  ScrollView,
-  FlatList,
-} from 'react-native';
-import { CheckBox } from 'react-native-elements';
 
-const New = () => {
-    
-      const [calls, setCalls] = useState( [
-      {id:1,  name: "Mark Doe",   date:"12 jan", time:'11:14 am', image:"https://bootdey.com/img/Content/avatar/avatar7.png"},
-      {id:2,  name: "Clark Man",  date:"12 jul", time:'15:58 am', image:"https://bootdey.com/img/Content/avatar/avatar6.png"} ,
-      {id:3,  name: "Jaden Boor", date:"12 aug", time:'12:45 am', image:"https://bootdey.com/img/Content/avatar/avatar5.png"} ,
-      {id:4,  name: "Srick Tree", date:"12 feb", time:'08:32 am', image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
-      {id:5,  name: "John Doe",   date:"12 oct", time:'07:45 am', image:"https://bootdey.com/img/Content/avatar/avatar3.png"} ,
-      {id:6,  name: "John Doe",   date:"12 jan", time:'09:54 am', image:"https://bootdey.com/img/Content/avatar/avatar2.png"} ,
-      {id:8,  name: "John Doe",   date:"12 jul", time:'11:22 am', image:"https://bootdey.com/img/Content/avatar/avatar1.png"} ,
-      {id:9,  name: "John Doe",   date:"12 aug", time:'13:33 am', image:"https://bootdey.com/img/Content/avatar/avatar4.png"} ,
-      {id:10, name: "John Doe",   date:"12 oct", time:'11:58 am', image:"https://bootdey.com/img/Content/avatar/avatar7.png"} ,
-      {id:11, name: "John Doe",   date:"12 jan", time:'09:28 am', image:"https://bootdey.com/img/Content/avatar/avatar1.png"},
-      ]);
-      const [ids, setIds] = useState([]);
+/*import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Camera } from 'expo-camera';
 
-      useEffect(()=>{
-        getChildChange(ids)
-      }, [ids])
+export default function App() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
 
-      const getChildChange = (loveids) => (
-        console.log(`buyakasha ${loveids}`)
-      )
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
-  const isChecked = (itemId) => {
-    const isThere = ids.includes(itemId);
-    return isThere;
-  };
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
-  const toggleChecked = (itemId) => {
-    const mention = [...ids, itemId];
-    console.log(`if everything worked ${mention}`)
+  takePictureAsync()
+  recordAsync()
+  stopRecording()
+  pausePreview()
+  resumePreview()
 
-    if (isChecked(itemId)) {
-      setIds(...mention, ids.filter((id) => id !== itemId))
-      console.log(`inside if statement ${[...ids]}`)
-    } else {
-      //setIds(ids => [...ids].concat(...mention))
-      setIds(ids => [...ids].concat(...mention))
-      //setCalls(mention)
-      console.log(ids)
-      //console.log(calls)
-      console.log(`if every worked ${mention}`)
-    }
-  };
-
-  const renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity>
-        <View style={styles.row}>
-          <Image source={{ uri: item.image }} style={styles.pic} />
-          <View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt}>{item.name}</Text>
-            </View>
-            <View style={styles.end}>
-              <Image
-                style={[
-                  styles.icon,
-                  { marginLeft: 15, marginRight: 5, width: 14, height: 14 },
-                ]}
-                source={{
-                  uri: 'https://img.icons8.com/small/14/000000/double-tick.png',
-                }}
-              />
-              <Text style={styles.time}>
-                {item.date} {item.time}
-              </Text>
-            </View>
-          </View>
-          <CheckBox
-            // iconRight
-            title="SMS"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={isChecked(item.id)}
-            onPress={() => toggleChecked(item.id)}
-          />
+  // ...
+<Camera
+  ref={ref => {
+    this.camera = ref;
+  }}
+/>;
+// ...
+snap = async () => {
+  if (this.camera) {
+    let photo = await this.camera.takePictureAsync();
+  }
+};
+  return (
+    <View style={styles.container}>
+      <Camera style={styles.camera} type={type}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setType(
+                type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back
+              );
+            }}>
+            <Text style={styles.text}> Flip </Text>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-    );
-  };
+      </Camera>
+    </View>
+  );
+}*/
 
+//const styles = StyleSheet.create({ ... }); 
+
+
+
+/* 
+import React, { Component, useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { CheckBox, Button } from 'react-native-elements';
+
+import { FloatingAction } from "react-native-floating-action";
+import * as DocumentPicker from 'expo-document-picker';
+
+import {ui_theme} from '../common-codes/config/ui_theme'
+
+const New = () => {    
+
+  const [visible, setVisible] = useState("none"); //used for toggling overlay  
+  const [popupContent, setPopupContent] = useState([]); //used for setting the content of the popup on every click 
+  
+  const [image, setImagePlaceholder] = useState(); //used in document picker to hold image
+
+      
+      const actions = [
+        {
+          text: "Notification",
+          icon: require("../image/a.jpg"),
+          name: "Notification",
+          position: 1,
+          color: '#FFA500'
+        },
+        {
+          text: "View",
+          icon: require("../image/a.jpg"),
+          name: "View",
+          position: 2,
+          color: '#FFA500'
+        },
+        {
+          text: "Photo",
+          icon: require("../image/a.jpg"),
+          name: "Photo",
+          position: 3,
+          color: '#FFA500'
+        },
+        {
+          text: "Record",
+          icon: require("../image/a.jpg"),
+          name: "Record",
+          position: 4,
+          color: 'Red'
+        }
+      ];
+
+      const selectFile = async () => {
+        // Opening Document Picker to select one file
+        
+          const { type, uri } = await DocumentPicker.getDocumentAsync(*/
+            //{ type: "*/*", copyToCacheDirectory: true, multiple: true }
+     /*     );
+          if (type==='cancel'){
+            return;
+          }
+         console.log('pickerResponse', uri)
+    
+         try {
+           const fetchResponse = await fetch(uri)
+          console.log('fetchResponse', fetchResponse)
+          const blob =await fetchResponse.blob()
+          console.log('blob', blob)
+          setImagePlaceholder(fetchResponse.url)
+         } catch (error){
+           console.log('ERR: ' + error.message)
+         }     
+      };
+
+      const photo =()=>{
+        console.log('Photo Clicked')
+      }
+      const video =()=>{
+        console.log('Video Clicked')
+      }
+
+      const fbAction = (theAction) => {
+        if( theAction == "Record" ){photo()}
+        else if( theAction == "Photo" ){toggleOverlay()}
+      }
+
+
+       //function to manage overlay
+    const toggleOverlay = () => {
+      if(visible==="none"){
+        setVisible("flex")
+        console.log(visible)
+      }
+      else setVisible("none")
+      console.log(visible)
+    };
   
     return (
       <View style={{ flex: 1 }}>
-        <Text
-          style={{
-            fontSize: 26,
-            color: '#0080ff',
-            textAlign: 'center',
-            marginBottom: 30,
-            marginTop: 10,
-          }}
-        >
-          Testing check box
-        </Text>
-        <FlatList
-          //extraData={this.state}
-          data={calls}
-          keyExtractor={(item) => {
-            return `${item.id}`;
-          }}
-          renderItem={renderItem}
-        />
+
+        <Text style={styles.example}>Floating Action example</Text>
+          <FloatingAction
+            actions={actions}
+            color='#FFA500'
+            onPressItem={(name, Actions) => { fbAction(name); 
+            }}
+          />
+        <Text style={styles.example}>Floating Action example</Text>
+        
+        <View style={{position: "fixed",width: "100%", height:"100%", display: visible}}>
+
+          <View style={{ backgroundColor: "#000000aa",width: "100%", height:"100%"}}> 
+            <View style={styles.popupVisibleContainer}> 
+            {popupContent != null ? (
+              <View style={ui_theme.SectionStyleRow}>
+
+                <View style={ui_theme.SectionStyleColumn} onPress={selectFile()}>
+                  <Image
+                    source={require("../image/a.jpg")}            
+                    style={{
+                      width: 40,
+                      height: 40,
+                      resizeMode: 'contain',
+                    }}
+                    />
+                  <Text>Select Image</Text>
+                </View>
+                  
+                <View style={ui_theme.SectionStyleColumn}>
+                  <Image
+                    source={require("../image/a.jpg")}            
+                    style={{
+                      width: 40,
+                      height: 40,
+                      resizeMode: 'contain',
+                    }}
+                    />
+                  <Text>Take Photo</Text>
+                </View>
+
+              </View>
+
+                ):null}
+              <Button title="Close Popup" onPress={toggleOverlay}  />
+            </View>
+          </View>   
+                      
+      </View>           
+
       </View>
     );
   
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#dcdcdc',
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    padding: 10,
-    justifyContent: 'space-between',
+  popupVisibleContainer: {
+    backgroundColor: "#ffffffff", 
+    margin:"15%", marginTop:"30%",
+    padding:40,
+    borderRadius:10,
+    width: "70%", 
+    height:"60%"
+  },
+  container: {
+    display: 'fixed',
+    bottom: '50px'
   },
   pic: {
     borderRadius: 25,
@@ -168,7 +265,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default New;
+export default New; 
+
+ */
+
+
+
+//end of floating action button
 
 /* import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Dimensions, Button } from 'react-native';

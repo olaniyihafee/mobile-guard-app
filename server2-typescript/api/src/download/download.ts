@@ -1,16 +1,13 @@
 import { object } from 'joi';
 import mongoose, { Schema, model, Document } from 'mongoose'
+import { groupSchema, LocationGroup, postSchema, User } from '../models'
+import { reorders_index_removing_space_and_repetition, reorders_index_adding_space_and_repetition } from '../download/searchErrors'
 
-export const sortFromDb = async ( TheCollection: any, lastCount: number ) => {
-  
-  let Count;  //variable to collect the number of past collection
+export const collectFromDb = async ( TheCollection: any, theList: any ) => {
 
-  if(!lastCount){ Count = 0} //last collected is empty
-  else{ Count = lastCount} //if there is value for last collected
+  let collectedList = await TheCollection.find({_id: {$in: [...theList]}})
 
-  const SortedRange = await TheCollection.find().skip( await TheCollection.count() - lastCount)
-
-  return SortedRange
+  return collectedList
 
 }
 
@@ -21,46 +18,56 @@ export const sortFromDb = async ( TheCollection: any, lastCount: number ) => {
   if(!lastCount){ Count = 0} //last collected is empty
   else{ Count = lastCount} //if there is value for last collected
 
-  const placeHolder = []
-  forEach((EachCollection) => {
-
-    const SortedValue = await EachCollection.find()
-
-    placeHolder.push( SortedValue )
-  })
-
   const SortedRange = await TheCollection.find().skip( await TheCollection.count() - lastCount)
+
+  //console.log('Chibakutensei: ' +SortedRange)
 
   return SortedRange
 
 }
 
-export const collect_and_attach_imgs_and_files = async (usedList: [], collectionName: String) => {
+const return_collection_model = ( schema_to_check: String) => {
+ //return User
+ switch(schema_to_check){
+   case 'post': return postSchema
+   case 'group': return  groupSchema
+ }
 
- /* const experiment = model('photos.files', new Schema({}), 'photos.files')
-   const experiment = mongoose.Collection.
-  //.db('juniper').collection('photos.files')
-  const result = await experiment.find({})
+}
 
-  console.log(result) }*/
+export const collect_and_attach_imgs_and_files = async (usedList: [], collectionName: String, imageCollectionPart: any) => {
 
-  let CollectionName
   let finalFile: any = [];
-  
-  const collection = model(`${collectionName}.files`, new Schema({}));    
-  const collectionChunks = model(`${collectionName}.chunks`, new Schema({}));
+
+  const collection = model(`${collectionName}.files`, return_collection_model(collectionName));    
+  const collectionChunks = model(`${collectionName}.chunks`, return_collection_model(collectionName));//new Schema({})
 
   let placeholder: any = []
   usedList.forEach((x: any,i)=>{
-    placeholder.push(x.groupPicture)
+    if(usedList[i][imageCollectionPart.valueOf()] !== ''){ 
+
+      if(Array.isArray(usedList[i][imageCollectionPart.valueOf()])){ //control statement to check if the search area is an array or a string
+        let hold = usedList[i][imageCollectionPart.valueOf()]
+        console.log(hold[0])
+        placeholder.push(hold[0])
+      }
+
+      else{                                                           //control statement to check if the search area is an array or a string
+        console.log(usedList[i][imageCollectionPart.valueOf()])
+        placeholder.push(usedList[i][imageCollectionPart.valueOf()])
+      }
+      
+    }
     //console.log(...placeholder)
   })
 
-  console.log("...usedList: "+ [...placeholder])
+  const {list_without_emptyspace_or_rep, indexOf_emptyspace_or_rep} = reorders_index_removing_space_and_repetition(placeholder)
 
- await collection.find({_id: {$in: [...placeholder]}}).then(
+  console.log("...usedList: "+ [...list_without_emptyspace_or_rep])
+
+ await collection.find({_id: {$in: [...list_without_emptyspace_or_rep]}}).then(
   async ( docs: any) =>{        
-      
+     console.log("doc "+ [...docs]) 
     if(!docs || docs.length === 0){        
       return {
        title: 'Download Error', 
@@ -101,29 +108,28 @@ export const collect_and_attach_imgs_and_files = async (usedList: [], collection
       }
       
        
-      for(let i=0; i<fileData.length; i++){            
+      for(let i=0; i<chunks.length; i++){            
         //This is in Binary JSON or BSON format, which is stored               
         //in fileData array in base64 endocoded string format 
 
-        let theFile = 'data:' + docs[i]._doc.contentType + ';base64,' 
-        + fileData[i]
+        
+          let theFile = 'data:' + docs[i]._doc.contentType + ';base64,' 
+          + fileData[i]
 
-        finalFile.push({ 
-          theFile
-        });
+          finalFile.push({ 
+            theFile
+          });
+        
       }
        });      
       }           
      }); 
 
-  
-     return finalFile 
+     //console.log('Chibakutensei: ' +finalFile)
+     return {finalFile, indexOf_emptyspace_or_rep}
          
 
 }
 
-/* 
-
- */
 
  

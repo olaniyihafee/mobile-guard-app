@@ -17,6 +17,7 @@ const userSchema = new Schema({
     password: String,
     profilePicture: String,
     posts: [ String ],
+    groups: [ String ],
 }, {
     timestamps: true
 })
